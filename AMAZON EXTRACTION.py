@@ -1,5 +1,5 @@
 
-##############################   PACKAGES /MODEULES REQUIRED  #################################
+#####################################    PACKAGES /MODEULES REQUIRED   #################################
 
 import requests                        # Importing requests to extract content from a url
 from bs4 import BeautifulSoup as bs    # Beautifulsoup is for web scrapping...used to scrap specific content 
@@ -30,6 +30,6 @@ lifebouy_df_all=pd.DataFrame()
 lifebouy_df_all['review']=lifebuoy_review
 lifebouy_df_all['date']=lifebouy_date
 
-lifebouy_df_all.to_csv(r'C:\Users\KIRAN BC\Desktop\PROJECT 2 NLP\lifebouy_725_09-08-2020.csv',index=True,header=True)
+lifebouy_df_all.to_excel(r'C:\Users\KIRAN BC\Desktop\PROJECT 2 NLP\lifebouy_reviews.xlsx',index=True,header=True)
 
 ############# 

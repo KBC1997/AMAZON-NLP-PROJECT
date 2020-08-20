@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objs as go
 
 from sklearn.preprocessing import MinMaxScaler
 
@@ -16,7 +13,7 @@ nse_3months.isnull().sum() ## no null values
 
 sorted_data = data.sort_values(by=['Date'])   # 754 total
 sorted_data.isnull().sum()
-sorted_data = sorted_data.dropna() ## removing na values and null values 752 total
+sorted_data = sorted_data.dropna()            # removing na values and null values 752 total
 
 nse_3months.columns
 nse_3months['ClosePrice'] = MinMaxScaler().fit_transform(nse_3months['Close Price'].values.reshape(-1,1))
@@ -37,9 +34,10 @@ day_review.reset_index(inplace= True,drop=True)
 
 nse_merge_all_review = pd.merge(nse_3months,day_review,on='Date')
 
-
-######### plots
+ 
+###################################     plots #############################
 nse_merge_all_review.columns
+
 ######################## ClosePrice vs polarity
 x = nse_merge_all_review['Date']
 y1 = nse_merge_all_review['ClosePrice']
@@ -67,7 +65,8 @@ ax2.set_title("closing price vs polarity : Plotting in Secondary Y Axis", fontsi
 fig.tight_layout()
 plt.show()
 
-## single plot --- polarity
+######################   single plot --- polarity ################
+
 x= nse_merge_all_review['Date']
 y= nse_merge_all_review['polarity']
 plt.figure(figsize=(30,10))
@@ -79,8 +78,9 @@ plt.xticks(rotation=40)
 plt.grid(linewidth=1)
 plt.show()
 
-####
-## single plot --- CLOSING PRICE ALL
+
+############### single plot --- CLOSING PRICE ALL ##########
+
 x= nse['Date']
 y= nse['Close Price']
 plt.figure(figsize=(50,20))
@@ -90,4 +90,6 @@ plt.xlabel('stock Date',fontsize=10)
 plt.ylabel('closing price',fontsize=10)
 plt.xticks(rotation=90)
 plt.show()
+
+##################### 
 

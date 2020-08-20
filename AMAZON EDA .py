@@ -9,14 +9,15 @@ from wordcloud import WordCloud
 
 ## To import the data of saved reviews
 
-lifebouy_view_df= pd.read_excel(r'C:\Users\KIRAN BC\Desktop\PROJECT 2 NLP\lifebuoy_reviews.xlsx')
+lifebouy_view_df= pd.read_excel(r'C:\Users\KIRAN BC\Desktop\PROJECT 2 NLP\datasets\lifebuoy_reviews.xlsx')
 
-lifebouy_view_df.isnull().sum()#754
+lifebouy_view_df.isnull().sum()  #754
 lifebouy_view_df.dropna(inplace=True)
 lifebouy_view_df.isnull().sum()
-lifebouy_view_df.head#752
+lifebouy_view_df.head            #752
 
 lifebuoy_view = lifebouy_view_df[lifebouy_view_df.columns[3]].tolist()
+
 ## Data cleaning
 
 handwash_rev_string="".join(lifebuoy_view)
@@ -35,20 +36,25 @@ handwash_reviews_words=[w for w in handwash_rev_words if w not in stopwords]
 handwash_reviews_strings=" ".join(handwash_reviews_words)
 
 #Sentence Tokenization
+
 from nltk.tokenize import sent_tokenize
 tokenized_text=sent_tokenize(handwash_reviews_strings)
 print(tokenized_text)
 
+type(tokenized_text)
 #Word Tokenization
+
 from nltk.tokenize import word_tokenize
-tokenized_word=word_tokenize(handwash_reviews_strings)
-print(tokenized_word)
+tokenized_words=word_tokenize(handwash_reviews_strings)
+print(tokenized_words)
 
 #Frequency Distribution
+
 from nltk.probability import FreqDist
-fdist = FreqDist(tokenized_word)
+fdist = FreqDist(tokenized_words)
 print(fdist)  #<FreqDist with 1483 samples and 5136 outcomes>
 fdist.most_common(5)
+
 # Frequency Distribution Plot
 fdist.plot(30,cumulative=False)
 plt.show()
@@ -60,7 +66,7 @@ wordcloud_lifebouy=WordCloud(
         mode='RGB',
         width=1800,
         height=1600
-        ).generate(handwash_reviews_strings)
+        ).generate(str(tokenized_text))
 plt.imshow(wordcloud_lifebouy)
 
 # wc = WordCloud(background_color="white", max_words=200, width=400, height=400, random_state=1).generate(handwash_reviews_strings)
@@ -80,11 +86,12 @@ with open("D:\\DATA SCIENCE\\JAN162020\\ASSIGNMENTS\\TEXT MINING\\negative-words
 negwords = negwords[37:]
 
 # negative word cloud
+
 # Choosing the only words which are present in negwords
-lifebouy_neg_in_neg = " ".join ([w for w in handwash_reviews_words if w in negwords])
+lifebouy_neg_in_neg = " ".join ([w for w in tokenized_words if w in negwords])
 
 wordcloud_neg_in_neg = WordCloud(
-                      background_color='white',
+                      background_color='black',
                       width=1800,
                       height=1400
                      ).generate(lifebouy_neg_in_neg)
@@ -92,17 +99,67 @@ wordcloud_neg_in_neg = WordCloud(
 plt.imshow(wordcloud_neg_in_neg)
 
 # Positive word cloud
+
 # Choosing the only words which are present in positive words
-lifebouy_pos_in_pos = " ".join ([w for w in handwash_reviews_words if w in poswords])
+lifebouy_pos_in_pos = " ".join ([w for w in tokenized_words if w in poswords])
 wordcloud_pos_in_pos = WordCloud(
-                      background_color='white',
+                      background_color='black',
                       width=1800,
                       height=1400
                      ).generate(lifebouy_pos_in_pos)
 
 plt.imshow(wordcloud_pos_in_pos)
 
-## sentimental analysis
+
+############################### ngrams  ###############333
+from nltk.util import ngrams
+
+
+def extract_ngrams(data, num):
+    n_grams = ngrams(nltk.word_tokenize(data), num)
+    return [ '_'.join(grams) for grams in n_grams]
+ 
+data = str(tokenized_text)
+ 
+print("1-gram: ", extract_ngrams(data, 1))
+print("2-gram: ", extract_ngrams(data, 2))
+print("3-gram: ", extract_ngrams(data, 3))
+print("4-gram: ", extract_ngrams(data, 4))
+
+#####       bigram plot
+
+bigram=extract_ngrams(data, 2)
+
+wordcloud = WordCloud(width = 800, height = 800, 
+                background_color ='black', 
+                stopwords = stopwords, 
+                min_font_size = 10).generate(str(bigram))
+
+
+plt.figure(figsize = (8, 8), facecolor = None) 
+plt.imshow(wordcloud) 
+plt.axis("off") 
+plt.tight_layout(pad = 0) 
+  
+plt.show()
+
+########## trigram ####
+trigram=extract_ngrams(data, 3)
+
+wordcloud = WordCloud(width = 800, height = 800, 
+                background_color ='black', 
+                stopwords = stopwords, 
+                min_font_size = 10).generate(str(trigram))
+
+
+plt.figure(figsize = (8, 8), facecolor = None) 
+plt.imshow(wordcloud) 
+plt.axis("off") 
+plt.tight_layout(pad = 0) 
+  
+plt.show()
+
+########################################    sentimental analysis ########################333
 # Create quick lambda functions to find the polarity and subjectivity of each routine
 # Terminal / Anaconda Navigator: conda install -c conda-forge textblob
 
@@ -176,7 +233,8 @@ neg_tokens = process_text(neg_lines)
 neg_freq = nltk.FreqDist(neg_tokens)
 neg_freq.most_common(20)
 
-#positive word frequency      
+#positive word frequency  
+    
 y_val = [x[1] for x in pos_freq.most_common()]
 fig = plt.figure(figsize=(10,5))
 plt.plot(y_val)
@@ -184,7 +242,9 @@ plt.xlabel("Words")
 plt.ylabel("Frequency")
 plt.title("Word Frequency Distribution (Positive)")
 plt.show()   
+
 #Negative word frequency
+
 y_val = [x[1] for x in neg_freq.most_common()]
 fig = plt.figure(figsize=(10,5))
 plt.plot(y_val)
@@ -193,9 +253,9 @@ plt.ylabel("Frequency")
 plt.title("Word Frequency Distribution (Negative)")
 plt.show() 
 
-#########
-######## STOCK PRICE
-########### For Three months may-june-july
+
+#########################################      STOCK PRICE       ############################
+########### For Three months may-june-july # since extracted data starts from may 
 stock=pd.read_csv(r"C:\Users\KIRAN BC\Desktop\PROJECT 2 NLP\MY CODE\01-01-2020-TO-10-08-2020HINDUNILVRALLN.csv")
 stock.dtypes
 type(stock)
@@ -203,7 +263,7 @@ stock.columns
 stock_3months = stock.iloc[82:,]
 stock_3months.plot()
 stock_3months.hist()
-######################## High Price vs Low Price
+######################## High Price vs Low Price ###########3
 
 x = stock_3months['Date']
 y1 = stock_3months['High Price']
@@ -319,6 +379,6 @@ ax2.set_title("No. of Trades vs % Dly Qt to Traded Qty: Plotting in Secondary Y 
 fig.tight_layout()
 plt.show()
 
-#######
+#########################
 
 
